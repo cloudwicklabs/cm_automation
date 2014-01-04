@@ -22,7 +22,9 @@ default[:scm][:version] = '4'
 default[:scm][:reposerver] = 'http://archive.cloudera.com'
 case node['platform']
 when "redhat","centos"
-  default[:scm][:yumpath] = "/cm#{node[:scm][:version]}/redhat/#{node['platform_version']}/#{node['kernel']['machine']}/cm/#{node[:scm][:version]}"
+  default[:scm][:yumbase] = "/cm#{node[:scm][:version]}/redhat/#{node['platform_version'].split(".")[0]}/#{node['kernel']['machine']}/cm"
+  default[:scm][:yumpath] = "#{node[:scm][:yumbase]}/#{node[:scm][:version]}"
+  default[:scm][:gpgkey] = "#{node[:scm][:yumbase]}/RPM-GPG-KEY-cloudera"
 when "ubuntu"
   default[:scm][:aptpath] = "/cm#{node[:scm][:version]}/ubuntu/#{node['lsb']['codename']}/#{node['kernel']['machine']  =~ /x86_64/ ? 'amd64' : 'i686'}/cm"
   default[:scm][:aptrelease] = "#{node['lsb']['codename']}-cm#{node[:scm][:version]}"

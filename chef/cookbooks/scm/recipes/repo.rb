@@ -30,8 +30,9 @@ when "ubuntu"
 when "redhat","centos"
   yum_repository "cloudera-manager" do
     description "Cloudera Manager RPM Repository"
-    url node[:scm][:yumpath]
+    url "#{node[:scm][:reposerver]}#{node[:scm][:yumpath]}"
     action :add
+    gpgkey "#{node[:scm][:reposerver]}#{node[:scm][:gpgkey]}"
   end
 else
   Chef::Log.warn("Adding the #{node['platform_family']} cloudera-manager repository is not yet not supported by this cookbook")
