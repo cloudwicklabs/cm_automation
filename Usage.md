@@ -34,19 +34,18 @@ Configuration file written to /root/.chef/knife.rb
 Sample knife initialization (*On Ubuntu*):
 
 ```
-$knife configure -i
+knife configure -i
 WARNING: No knife configuration file found
-Where should I put the config file? [/root/.chef/knife.rb]
-Please enter the chef server URL: [http://ip-10-251-35-221.us-west-2.compute.internal:4000]
-Please enter a name for the new user: [ubuntu]
-Please enter the existing admin name: [admin] chef-webui
-Please enter the location of the existing admin's private key: [/etc/chef/admin.pem] ~/.chef/chef-webui.pem
-Please enter the validation clientname: [chef-validator]
-Please enter the location of the validation key: [/etc/chef/validation.pem] ~/.chef/chef-validator.pem
-Please enter the path to a chef repository (or leave blank):
+Where should I put the config file? [/root/.chef/knife.rb] 
+Please enter the chef server URL: [http://ip-10-197-54-125.us-west-1.compute.internal:4000] 
+Please enter a clientname for the new client: [ubuntu] 
+Please enter the existing admin clientname: [chef-webui] 
+Please enter the location of the existing admin client's private key: [/etc/chef/webui.pem] ~/.chef/webui.pem
+Please enter the validation clientname: [chef-validator]  
+Please enter the location of the validation key: [/etc/chef/validation.pem] ~/.chef/validation.pem
+Please enter the path to a chef repository (or leave blank): 
 Creating initial API user...
-Please enter a password for the new user:
-Created user[root]
+Created client[ubuntu]
 Configuration file written to /root/.chef/knife.rb
 ```
 
