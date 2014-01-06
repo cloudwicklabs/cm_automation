@@ -1,23 +1,29 @@
 require_relative 'cm_api'
+require 'pp'
 
+# Name of the cluster that will be managed by CM
 CLUSTER = "prod001"
 
-cm_api = CMApi.new("admin", "admin", "ec2-54-241-68-227.us-west-1.compute.amazonaws.com")
-pp cm_api.get('/hosts')
+# Initialize the cloudera manager object using the cm server hostname and credentials to login
+cm_api = CMApi.new("admin", "admin", "ec2-54-214-230-205.us-west-2.compute.amazonaws.com")
+# Check the hosts connected to the cm server
+hosts = cm_api.get('/hosts').parsed_response['items']
 
-# Create new cluster
+# Create new cluster, with specified CDH version
 cm_api.create_cluster(CLUSTER, "CDH4")
 
-# Create a service
+# Create a service, with the logical name of the service and type of the service
 cm_api.create_service(CLUSTER, "hdfs001", "HDFS")
 
-# Create hosts
+# Create hosts, on which the services will be managed on
 HOSTNAMES = [
-  ["ip-10-171-90-235.us-west-1.compute.internal", "10.171.90.235"],
-  ["ip-10-174-106-221.us-west-1.compute.internal", "10.174.106.221"],
-  ["ip-10-170-215-48.us-west-1.compute.internal", "10.170.215.48"]
+  ["ip-10-250-78-178.us-west-2.compute.internal", "10.250.78.178"],
+  ["ip-10-251-57-189.us-west-2.compute.internal", "10.251.57.189"],
+  ["ip-10-224-23-22.us-west-2.compute.internal", "10.224.23.22"],
+  ["ip-10-224-19-190.us-west-2.compute.internal", "10.224.19.190"]
 ]
 
+# Create host objects if they are not already added to the cloudera manager
 HOSTNAMES.each do |host|
   cm_api.create_host(
     host[0],  # hostid
@@ -26,7 +32,8 @@ HOSTNAMES.each do |host|
   )
 end
 
-# Install cloudera manager agents on hosts
+# Install cloudera manager agents on hosts, supports from v6 of the api
+=begin
 hosts = [] # hosts to install cm agents on
 HOSTNAMES.each do |host|
   hosts << host[0]
@@ -34,20 +41,21 @@ end
 cmd_ids = cm_api.install_cm_agent("root", hosts, :privateKey => File.expand_path('~/.ssh/ankus'))
 cmd_ids.each do |cmd|
   cm_api.command_status(cmd)
-end  
-
-# Download, Distribute and Activate Parcels - CDH
-available_parcels = list_available_parcels(CLUSTER) # => {"IMPALA"=>"1.2.3-1.p0.97", "SOLR"=>"1.1.0-1.cdh4.3.0.p0.21", "CDH"=>"4.5.0-1.cdh4.5.0.p0.30"}
-start_parcel_download(CLUSTER, 'CDH', available_parcels['CDH'])
-distribute_parcel(CLUSTER, 'CDH', available_parcels['CDH'])
-activate_parcel(CLUSTER, 'CDH', available_parcels['CDH'])
+end
+=end
 
 # Create roles for servers
 cm_api.create_role(CLUSTER, "hdfs001", "hdfs001-nn", "NAMENODE", HOSTNAMES[0][0])
 cm_api.create_role(CLUSTER, "hdfs001", "hdfs001-snn", "SECONDARYNAMENODE", HOSTNAMES[0][0])
-HOSTNAMES.each_with_index do |host, index|
+HOSTNAMES[1..-1].each_with_index do |host, index|
   cm_api.create_role(CLUSTER, "hdfs001", "hdfs001-dn#{index+1}", "DATANODE", host[0])
 end
+
+# Download, Distribute and Activate Parcels - CDH
+available_parcels = cm_api.list_available_parcels(CLUSTER) # => {"IMPALA"=>"1.2.3-1.p0.97", "SOLR"=>"1.1.0-1.cdh4.3.0.p0.21", "CDH"=>"4.5.0-1.cdh4.5.0.p0.30"}
+cm_api.start_parcel_download(CLUSTER, 'CDH', available_parcels['CDH'])
+cm_api.distribute_parcel(CLUSTER, 'CDH', available_parcels['CDH'])
+cm_api.activate_parcel(CLUSTER, 'CDH', available_parcels['CDH'])
 
 # Update config for the several hdfs roles
 hdfs_service_config = {
@@ -67,7 +75,7 @@ dn_config = {
 cm_api.update_service_config(CLUSTER, "hdfs001", hdfs_service_config)
 cm_api.update_role_config(CLUSTER, "hdfs001", "hdfs001-nn", nn_config)
 cm_api.update_role_config(CLUSTER, "hdfs001", "hdfs001-snn", snn_config)
-HOSTNAMES.each_with_index do |host, index|
+HOSTNAMES[1..-1].each_with_index do |host, index|
   cm_api.update_role_config(CLUSTER, "hdfs001", "hdfs001-dn#{index+1}", dn_config)
 end
 
@@ -77,7 +85,7 @@ cm_api.command_status(cmd_id)
 
 # Start hdfs
 hdfs_roles = ["hdfs001-nn", "hdfs001-snn"]
-HOSTNAMES.each_with_index do |host, index|
+HOSTNAMES[1..-1].each_with_index do |host, index|
   hdfs_roles << "hdfs001-dn#{index+1}"
 end  
 cmd_ids = cm_api.start_service(CLUSTER, "hdfs001", hdfs_roles)

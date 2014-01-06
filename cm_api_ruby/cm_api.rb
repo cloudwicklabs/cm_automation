@@ -290,7 +290,7 @@ class CMApi
     else
       raise "Unable to find the specified cluster '#{cluster_name}'"
     end
-    unless response.response.code != "200" && response.parsed_response['success']
+    if response.response.code != "200" && ! response.parsed_response['success']
       puts "Failed downloading parcel #{product_name}: #{parcel_version} for cluster: #{cluster_name}. Reason: #{response.parsed_response}"
     else
       puts "parcel downloading issued, waiting for the parcel download to complete"
@@ -315,7 +315,7 @@ class CMApi
     else
       raise "Unable to find the specified cluster: '#{cluster_name}'"
     end
-    unless response.response.code != "200" && response.parsed_response['success']
+    if response.response.code != "200" && ! response.parsed_response['success']
       puts "Failed distributing parcel #{product_name}: #{parcel_version} for cluster: #{cluster_name}. Reason: #{response.parsed_response}"
     else
       puts "parcel distributing issued, waiting for the parcel distribution to complete"
@@ -340,7 +340,7 @@ class CMApi
     else
       raise "Unable to find the specified cluster: '#{cluster_name}'"      
     end
-    unless response.response.code != "200" && response.parsed_response['success']
+    if response.response.code != "200" && ! response.parsed_response['success']
       puts "Failed activating parcel #{product_name}: #{parcel_version} for cluster: #{cluster_name}. Reason: #{response.parsed_response}"
     else
       puts "parcel activation issued, waiting for the parcel activation to complete"
