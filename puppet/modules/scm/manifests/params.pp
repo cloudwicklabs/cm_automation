@@ -9,7 +9,8 @@ class scm::params {
   $cm_reposerver = 'http://archive.cloudera.com'
   case $::operatingsystem {
     'CentOS', 'RedHat': {
-      $cm_yumpath = "/cm${cm_version}/redhat/${::os_maj_version}/${::architecture}/cm/${cm_version}"
+      $cm_yumpath = "/cm${cm_version}/redhat/${::operatingsystemmajrelease}/${::architecture}/cm/${cm_version}/"
+      $cm_gpgkey = "/cm${cm_version}/redhat/${::operatingsystemmajrelease}/${::architecture}/cm/RPM-GPG-KEY-cloudera"
     }
     'Ubuntu': {
       $cm_aptpath = "/cm${cm_version}/ubuntu/${::lsbdistcodename}/${::architecture}/cm"

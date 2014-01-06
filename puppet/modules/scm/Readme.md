@@ -3,6 +3,9 @@ puppet module for Cloudera Manager
 
 This module will install and manage Cloudera Manager
 
+###Dependencies
+**puppetlabs-apt**
+
 ###Sample Usage
 
 For managing cloudera manager

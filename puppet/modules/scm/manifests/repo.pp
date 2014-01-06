@@ -31,7 +31,7 @@
 # Copyright (C) 2013 Cloudwick, unless otherwise noted.
 #
 class scm::repo (
-  $cm_reposerver   = $scm::params::cm_yumserver,
+  $cm_reposerver  = $scm::params::cm_reposerver,
   $cm_version     = $scm::params::cm_version,
   ) inherits scm::params {
   case $::operatingsystem {
@@ -61,8 +61,8 @@ class scm::repo (
         descr          => 'Cloudera Manager',
         enabled        => 1,
         gpgcheck       => 1,
-        gpgkey         => "${cm_reposerver}${scm::params::cm_yumpath}RPM-GPG-KEY-cloudera",
-        baseurl        => "${cm_reposerver}${scm::params::cm_yumpath}${cm_version}/",
+        gpgkey         => "${cm_reposerver}${scm::params::cm_gpgkey}",
+        baseurl        => "${cm_reposerver}${scm::params::cm_yumpath}",
         priority       => $scm::params::yum_priority,
         protect        => $scm::params::yum_protect
       }
