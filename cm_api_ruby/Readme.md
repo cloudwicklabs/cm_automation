@@ -1,5 +1,5 @@
-Uisng Cloudera Manager API
-==========================
+Cloudera Manager API
+====================
 
 Sample application demonstrating the usage of cloudera manager api using ruby.
 
