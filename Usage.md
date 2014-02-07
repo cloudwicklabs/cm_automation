@@ -2,53 +2,11 @@
 
 ##Automating Cloudera Manager Installation using Chef
 ###Installing Chef Server
-On the machine you want to install chef server run the following command
+You can manually install chef server or use automated script as below:
 
 ```
-curl https://raw.github.com/ashrithr/scripts/master/chef_installer.sh | bash /dev/stdin -s
+curl https://raw2.github.com/cloudwicklabs/scripts/master/chef_install.sh | bash /dev/stdin -s
 ```
-
-Once chef server is up and running, run `knife configure -i` to configure knife tool.
-
-> For RedHat based installations, use `source ~/.bash_profile` to load chef path before running knife.
-
-Sample knife initialization (*On CentOS*):
-
-```
-$knife configure -i
-WARNING: No knife configuration file found
-Where should I put the config file? [/root/.chef/knife.rb]
-Please enter the chef server URL: [http://ip-10-251-35-221.us-west-2.compute.internal:4000] https://ip-10-251-35-221.us-west-2.compute.internal
-Please enter a name for the new user: [root]
-Please enter the existing admin name: [admin] chef-webui
-Please enter the location of the existing admin's private key: [/etc/chef/admin.pem] ~/.chef/chef-webui.pem
-Please enter the validation clientname: [chef-validator]
-Please enter the location of the validation key: [/etc/chef/validation.pem] ~/.chef/chef-validator.pem
-Please enter the path to a chef repository (or leave blank):
-Creating initial API user...
-Please enter a password for the new user:
-Created user[root]
-Configuration file written to /root/.chef/knife.rb
-```
-
-Sample knife initialization (*On Ubuntu*):
-
-```
-knife configure -i
-WARNING: No knife configuration file found
-Where should I put the config file? [/root/.chef/knife.rb] 
-Please enter the chef server URL: [http://ip-10-197-54-125.us-west-1.compute.internal:4000] 
-Please enter a clientname for the new client: [ubuntu] 
-Please enter the existing admin clientname: [chef-webui] 
-Please enter the location of the existing admin client's private key: [/etc/chef/webui.pem] ~/.chef/webui.pem
-Please enter the validation clientname: [chef-validator]  
-Please enter the location of the validation key: [/etc/chef/validation.pem] ~/.chef/validation.pem
-Please enter the path to a chef repository (or leave blank): 
-Creating initial API user...
-Created client[ubuntu]
-Configuration file written to /root/.chef/knife.rb
-```
-
 
 Verfiy chef setup using 
 
@@ -107,17 +65,17 @@ Assign roles to the nodes before bootstraping them:
 
 ##Automating Cloudera Manager Installation using Puppet
 ###Installing Puppet Server
-On the machine you want to install puppet server run the following command:
+You can manually install puppet server or use this automated script to do so:
 
 ```
-curl https://raw.github.com/ashrithr/scripts/master/puppetinstaller.sh | bash /dev/stdin -s
+curl https://raw2.github.com/cloudwicklabs/scripts/master/puppet_install.sh | bash /dev/stdin -s
 ```
 
 ###Installing Puppet Agents
-On the machines you want to install puppet agents run the following command, replace the SERVER_NAME with your puppet server's fqdn:
+On the machines you want to install puppet agents run the following command, replace the `SERVER_NAME` with your puppet server's fqdn:
 
 ```
-curl https://raw.github.com/ashrithr/scripts/master/puppetinstaller.sh | bash /dev/stdin -c -H SERVER_NAME
+curl https://raw2.github.com/cloudwicklabs/scripts/master/puppet_install.sh | bash /dev/stdin -c -H SERVER_NAME
 ```
 
 ###Downloading required puppet modules
